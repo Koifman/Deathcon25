@@ -1,0 +1,18 @@
+index=windows sourcetype="WinEventLog" (EventCode=13 TargetObject="*\\cblra\\*") OR (EventCode=1 Image IN ("*\\Remote Assistant.exe", "*\\CloudRaUtilities.exe", "*\\CloudRaService.exe")) OR (EventCode=4697 Service_File_Name="*cloud*")
+| eval relevant_fields=case(
+    EventCode=13, Details + "
+   -->  " + TargetObject + "
+     ",
+    EventCode=1, Image + "
+   -->  " + CommandLine + "
+     ",
+    EventCode=4697, Service_File_Name,
+    1=1, "Unknown"
+)
+| eval type=case(
+    EventCode=13, "Registry",a
+    EventCode=1, "Process",
+    EventCode=4697, "Service",
+    1=1, "Unknown"
+    )
+| stats values(relevant_fields) as relevant_fields, count by host, type
