@@ -1,0 +1,24 @@
+index=windows sourcetype="WinEventLog" (EventCode=1 Image IN ("*\\dwagent.exe")) OR (EventCode=4697 Service_File_Name="*dwagent*") OR (EventCode=3 DestinationHostname="*dwservice*") OR (EventCode=22 QueryName="*dwservice*")
+| eval relevant_fields=case(
+    EventCode=13, Details + "
+   -->  " + TargetObject + "
+     ",
+    EventCode=1, Image + "
+   -->  " + CommandLine + "
+     ",
+    EventCode=4697, Service_File_Name,
+    EventCode=22, QueryName,
+    EventCode=3, DestinationHostname + "
+   -->  " + Image + "
+     ", 
+    1=1, "Unknown"
+)
+| eval type=case(
+    EventCode=13, "Registry",
+    EventCode=1, "Process",
+    EventCode=4697, "Service",
+    EventCode=22, "DNS",
+    EventCode=3, "Network",
+    1=1, "Unknown"
+    )
+| stats values(relevant_fields) as relevant_fields, count by host, type
