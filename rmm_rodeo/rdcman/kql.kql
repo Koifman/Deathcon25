@@ -1,0 +1,4 @@
+SecurityEvent
+| where EventID == "4688"
+| where NewProcessName endswith "RDCMan.exe"
+| project NewProcessName, CommandLine
