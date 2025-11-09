@@ -1,0 +1,1 @@
+select "Parent Process Name" as 'Parent Process Name (custom)',"Process Name" as 'Process Name (custom)',"Command" as 'Command (custom)' from events where ( ( ( "Process Name" ilike '%bigfix%' OR "Process Name" ilike '%ISBEW64.exe%' ) OR "Process Name" ilike '%BESAdmin.exe%' ) AND "qidEventId"='4688' ) order by "startTime" desc LIMIT 1000 last 30 minutes
