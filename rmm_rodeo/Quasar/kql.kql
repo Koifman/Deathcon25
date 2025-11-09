@@ -1,0 +1,4 @@
+SecurityEvent
+| where EventID == "4688"
+| where NewProcessName endswith "Quasar.exe"
+| project NewProcessName, CommandLine
