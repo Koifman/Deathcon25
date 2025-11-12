@@ -1,4 +1,4 @@
-index=windows sourcetype="WinEventLog" (EventCode=1 Image IN ("*\\pchelpware*"))
+index=windows sourcetype="WinEventLog" (EventCode=1 Image IN ("*\\pchelpware_viewer.exe"))
 | eval relevant_fields=case(
     EventCode=13, Details + "
    -->  " + TargetObject + "
